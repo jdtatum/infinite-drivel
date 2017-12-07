@@ -1,20 +1,46 @@
 import React, { Component } from 'react';
-import Login from './Login';
+import base from '../base';
 
 class App extends Component {
   constructor() {
     super();
-
+    this.authenticate = this.authenticate.bind(this);
+    this.logout = this.logout.bind(this);
+    this.authHandler = this.authHandler.bind(this);
     this.renderLogin = this.renderLogin.bind(this);
     this.state = {
       uid: null
     }
   }
 
+  authenticate(provider) {
+    console.log(`Trying to login with ${provider}`);
+    base.authWithOAuthPopup(provider, this.authHandler);
+  }
+
+  logout() {
+    base.unauth();
+    this.setState({ uid: null })
+  }
+
+  authHandler(err, authData) {
+    console.log(authData);
+    if (err) {
+      console.error(err);
+      return;
+    }
+    this.setState({
+      uid: authData.user.uid
+    });
+  }
+
   renderLogin() {
     if(!this.state.uid) {
       return (
-        <Login />
+        <nav className="login">
+          <h2>Login</h2>
+          <button className="facebook" onClick={() => this.authenticate('facebook')}>Log In with Facebook</button>
+        </nav>
       )
     }
   }
@@ -25,7 +51,7 @@ class App extends Component {
     }
     return (
       <div className="app">
-        <h2>App</h2>
+        <h2>Logged In</h2>
       </div>
     );
   }

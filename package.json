@@ -2,19 +2,34 @@
   "name": "drivel",
   "version": "0.1.0",
   "private": true,
+  "devDependencies": {
+    "create-react-app-stylus": "^1.1.1",
+    "autoprefixer-stylus": "0.10.0",
+    "babel-eslint": "^7.1.1",
+    "concurrently": "3.0.0",
+    "eslint": "^3.12.2",
+    "eslint-plugin-flowtype": "^2.29.1",
+    "eslint-plugin-jsx-a11y": "^3.0.2",
+    "eslint-plugin-react": "^6.8.0",
+    "react-scripts": "0.6.1",
+    "stylus": "0.54.5"
+  },
   "dependencies": {
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "react-scripts": "1.0.17"
+    "history": "4.2.0",
+    "re-base": "^2.2.0",
+    "react": "15.3.2",
+    "react-addons-css-transition-group": "15.3.2",
+    "react-dom": "15.3.2",
+    "react-router": "4.0.0-alpha.4"
   },
   "scripts": {
     "start": "react-scripts-with-stylus start src/css/style.styl",
-  "build": "react-scripts-with-stylus build src/css/style.styl",
+    "build": "react-scripts-with-stylus build src/css/style.styl",
     "watch": "concurrently --names \"webpack, stylus\" --prefix name \"npm run start\" \"npm run styles:watch\"",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "devDependencies": {
-    "create-react-app-stylus": "^1.1.1"
+  "eslintConfig": {
+    "extends": "./node_modules/react-scripts/.eslintrc"
   }
 }
