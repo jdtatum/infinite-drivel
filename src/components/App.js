@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import base from '../base';
-import User from './User'
+import User from './User';
+import HomeMenu from './HomeMenu'
 
 class App extends Component {
   constructor() {
@@ -66,20 +67,20 @@ class App extends Component {
   }
 
   render() {
-    const logout = <button onClick={this.logout}>Log out!</button>;
-
+    const logout = <button onClick={this.logout}>Log out</button>;
 
     if(!this.state.uid) {
       return <div>{this.renderLogin()}</div>
     }
     return (
       <div className="app">
-        <h2>Logged In, {this.state.userName}</h2>
+        <h2>Welcome to Infinite Drivel</h2>
         <User
           userName={this.state.userName}
           userEmail={this.state.userEmail}
           userPhoto={this.state.userPhoto}
         />
+        <HomeMenu />
         {logout}
       </div>
     );
