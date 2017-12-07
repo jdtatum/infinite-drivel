@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import base from '../base';
+import User from './User'
 
 class App extends Component {
   constructor() {
@@ -9,8 +10,19 @@ class App extends Component {
     this.authHandler = this.authHandler.bind(this);
     this.renderLogin = this.renderLogin.bind(this);
     this.state = {
-      uid: null
+      uid: null,
+      userName: null,
+      userEmail: null,
+      userPhoto: null
     }
+  }
+
+  componentDidMount() {
+    base.onAuth((user) => {
+      if(user) {
+        this.authHandler(null, { user });
+      }
+    });
   }
 
   authenticate(provider) {
@@ -20,7 +32,12 @@ class App extends Component {
 
   logout() {
     base.unauth();
-    this.setState({ uid: null })
+    this.setState({
+      uid: null,
+      userName: null,
+      userEmail: null,
+      userPhoto: null
+    })
   }
 
   authHandler(err, authData) {
@@ -30,7 +47,10 @@ class App extends Component {
       return;
     }
     this.setState({
-      uid: authData.user.uid
+      uid: authData.user.uid,
+      userName: authData.user.displayName,
+      userEmail: authData.user.email,
+      userPhoto: authData.user.photoURL
     });
   }
 
@@ -46,12 +66,21 @@ class App extends Component {
   }
 
   render() {
+    const logout = <button onClick={this.logout}>Log out!</button>;
+
+
     if(!this.state.uid) {
       return <div>{this.renderLogin()}</div>
     }
     return (
       <div className="app">
-        <h2>Logged In</h2>
+        <h2>Logged In, {this.state.userName}</h2>
+        <User
+          userName={this.state.userName}
+          userEmail={this.state.userEmail}
+          userPhoto={this.state.userPhoto}
+        />
+        {logout}
       </div>
     );
   }
