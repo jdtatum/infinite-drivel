@@ -3,3 +3,9 @@ body {
   color: #ccc;
   text-align: center;
 }
+body .hide {
+  display: none;
+}
+body .show {
+  display: block;
+}
