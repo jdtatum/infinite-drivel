@@ -22,7 +22,7 @@ class HomeMenu extends React.Component {
   }
   goToStory(event) {
     event.preventDefault();
-    var storyId = this.storyInput.value;
+    var storyId = this.storeInput.value;
     console.log(`Going to ${storyId}`)
     // second we're going to transition from / to /store/:storeId
     this.context.router.transitionTo(`/story/${storyId}`);

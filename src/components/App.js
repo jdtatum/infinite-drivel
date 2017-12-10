@@ -10,12 +10,10 @@ class App extends Component {
     this.logout = this.logout.bind(this);
     this.authHandler = this.authHandler.bind(this);
     this.renderLogin = this.renderLogin.bind(this);
-    this.state = {
-      uid: null,
-      userName: null,
-      userEmail: null,
-      userPhoto: null
-    }
+  }
+
+  state = {
+    user: {}
   }
 
   componentDidMount() {
@@ -34,10 +32,7 @@ class App extends Component {
   logout() {
     base.unauth();
     this.setState({
-      uid: null,
-      userName: null,
-      userEmail: null,
-      userPhoto: null
+      user: null
     })
   }
 
@@ -48,10 +43,7 @@ class App extends Component {
       return;
     }
     this.setState({
-      uid: authData.user.uid,
-      userName: authData.user.displayName,
-      userEmail: authData.user.email,
-      userPhoto: authData.user.photoURL
+      user: {...authData.user}
     });
   }
 
@@ -69,16 +61,16 @@ class App extends Component {
   render() {
     const logout = <button onClick={this.logout}>Log out</button>;
 
-    if(!this.state.uid) {
+    if(!this.state.user) {
       return <div>{this.renderLogin()}</div>
     }
     return (
       <div className="app">
         <h2>Welcome to Infinite Drivel</h2>
         <User
-          userName={this.state.userName}
-          userEmail={this.state.userEmail}
-          userPhoto={this.state.userPhoto}
+          userName={this.state.user.displayName}
+          userEmail={this.state.user.email}
+          userPhoto={this.state.user.photoURL}
         />
         <HomeMenu />
         {logout}
