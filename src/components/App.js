@@ -72,7 +72,9 @@ class App extends Component {
           userEmail={this.state.user.email}
           userPhoto={this.state.user.photoURL}
         />
-        <HomeMenu />
+        <HomeMenu
+          story={this.state.story}
+        />
         {logout}
       </div>
     );
