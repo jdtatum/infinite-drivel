@@ -74,6 +74,7 @@ class App extends Component {
         />
         <HomeMenu
           story={this.state.story}
+          user={this.state.user}
         />
         {logout}
       </div>

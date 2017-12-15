@@ -1,15 +1,62 @@
 import React from 'react';
-// import base from '../base';
+import base from '../base';
 import StoryBody from './StoryBody';
 
 class StoryDisplay extends React.Component {
   constructor() {
     super();
+    this.authenticate = this.authenticate.bind(this);
+    this.logout = this.logout.bind(this);
+    this.authHandler = this.authHandler.bind(this);
+    this.renderLogin = this.renderLogin.bind(this);
     this.goHome = this.goHome.bind(this);
     this.addToStory = this.addToStory.bind(this);
+  }
 
-    this.state = {
-      story: {}
+  state = {
+    user: {},
+    story: {}
+  }
+
+  componentDidMount() {
+    base.onAuth((user) => {
+      if(user) {
+        this.authHandler(null, { user });
+      }
+    });
+  }
+
+  authenticate(provider) {
+    console.log(`Trying to login with ${provider}`);
+    base.authWithOAuthPopup(provider, this.authHandler);
+  }
+
+  logout() {
+    base.unauth();
+    this.setState({
+      user: null
+    })
+  }
+
+  authHandler(err, authData) {
+    console.log(authData);
+    if (err) {
+      console.error(err);
+      return;
+    }
+    this.setState({
+      user: {...authData.user}
+    });
+  }
+
+  renderLogin() {
+    if(!this.state.uid) {
+      return (
+        <nav className="login">
+          <h2>Login</h2>
+          <button className="facebook" onClick={() => this.authenticate('facebook')}>Log In with Facebook</button>
+        </nav>
+      )
     }
   }
 
@@ -29,6 +76,11 @@ class StoryDisplay extends React.Component {
   }
 
   render() {
+    console.log(this.state.user);
+    if(!this.state.user.displayName) {
+      return <div>{this.renderLogin()}</div>
+    }
+
     return(
       <div className="story-container">
         <h2>Story by </h2>
