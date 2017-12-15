@@ -1,5 +1,6 @@
 import React from 'react';
 import base from '../base';
+import { nameSplit } from '../helpers';
 import StoryBody from './StoryBody';
 
 class StoryDisplay extends React.Component {
@@ -21,10 +22,6 @@ class StoryDisplay extends React.Component {
   componentWillMount() {
     // this runs right before the <App> is rendered
     this.ref = base.syncState(`/story/${this.props.params.storyId}`, {
-      context: this,
-      state: 'story'
-    });
-    this.ref = base.syncState(`/story/${this.props.params.storyId}/attributes`, {
       context: this,
       state: 'story'
     });
@@ -100,7 +97,7 @@ class StoryDisplay extends React.Component {
 
     return(
       <div className="story-container">
-        <h2>Story by {this.state.user.displayName}</h2>
+        <h2>Story by {nameSplit(this.state.user.displayName)}</h2>
         {
           Object
             .keys(this.state.story)
