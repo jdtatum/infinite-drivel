@@ -7,6 +7,7 @@ class HomeMenu extends React.Component {
     this.showStoryInput = this.showStoryInput.bind(this);
     this.goToStory = this.goToStory.bind(this);
   }
+  
   goToNewStory(event) {
     event.preventDefault();
     console.log('Going to a New Story');
@@ -16,13 +17,15 @@ class HomeMenu extends React.Component {
     // second we're going to transition from / to /store/:storeId
     this.context.router.transitionTo(`/story/${storyId}`);
   }
+
   showStoryInput(event) {
     event.preventDefault();
     document.querySelector(".goto-story-input").classList.remove("hide");
   }
+
   goToStory(event) {
     event.preventDefault();
-    var storyId = this.storeInput.value;
+    var storyId = this.storyInput.value;
     console.log(`Going to ${storyId}`)
     // second we're going to transition from / to /store/:storeId
     this.context.router.transitionTo(`/story/${storyId}`);

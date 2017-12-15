@@ -18,12 +18,29 @@ class StoryDisplay extends React.Component {
     story: {}
   }
 
+  componentWillMount() {
+    // this runs right before the <App> is rendered
+    this.ref = base.syncState(`/story/${this.props.params.storyId}`, {
+      context: this,
+      state: 'story'
+    });
+    this.ref = base.syncState(`/story/${this.props.params.storyId}/attributes`, {
+      context: this,
+      state: 'story'
+    });
+
+  }
+
   componentDidMount() {
     base.onAuth((user) => {
       if(user) {
         this.authHandler(null, { user });
       }
     });
+  }
+
+  componentWillUnmount() {
+    base.removeBinding(this.ref);
   }
 
   authenticate(provider) {
@@ -83,13 +100,13 @@ class StoryDisplay extends React.Component {
 
     return(
       <div className="story-container">
-        <h2>Story by </h2>
+        <h2>Story by {this.state.user.displayName}</h2>
         {
           Object
             .keys(this.state.story)
             .map(key => <StoryBody key={key} index={key} body={this.state.story[key]} />)
           }
-        <div className="story-imput">
+        <div className="story-input">
           <form ref={(input) => this.storyForm = input} onSubmit={(e) => this.addToStory(e)}>
             <textarea ref={(input) => this.storyBody = input}></textarea><br />
             <button type="submit">Add to story</button>
