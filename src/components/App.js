@@ -53,6 +53,7 @@ class App extends Component {
         <nav className="login">
           <h2>Login</h2>
           <button className="facebook" onClick={() => this.authenticate('facebook')}>Log In with Facebook</button>
+          <button className="twitter" onClick={() => this.authenticate('twitter')}>Log In with Twitter</button>
         </nav>
       )
     }

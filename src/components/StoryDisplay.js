@@ -16,7 +16,8 @@ class StoryDisplay extends React.Component {
 
   state = {
     user: {},
-    story: {}
+    story: {},
+    usersLoggedIn: {}
   }
 
   componentWillMount() {
@@ -40,6 +41,7 @@ class StoryDisplay extends React.Component {
     base.removeBinding(this.ref);
   }
 
+
   authenticate(provider) {
     console.log(`Trying to login with ${provider}`);
     base.authWithOAuthPopup(provider, this.authHandler);
@@ -58,9 +60,17 @@ class StoryDisplay extends React.Component {
       console.error(err);
       return;
     }
+
+    const usersLoggedIn = {...this.state.usersLoggedIn};
+    const users = Object.keys(usersLoggedIn);
+    const userCount = users.length + 1;
+
+    usersLoggedIn[`user-${userCount}`] = {name: authData.user.displayName, uid: authData.user.uid};
     this.setState({
-      user: {...authData.user}
+      user: {...authData.user},
+      usersLoggedIn: {...usersLoggedIn}
     });
+
   }
 
   renderLogin() {
@@ -69,6 +79,7 @@ class StoryDisplay extends React.Component {
         <nav className="login">
           <h2>Login</h2>
           <button className="facebook" onClick={() => this.authenticate('facebook')}>Log In with Facebook</button>
+          <button className="twitter" onClick={() => this.authenticate('twitter')}>Log In with Twitter</button>
         </nav>
       )
     }

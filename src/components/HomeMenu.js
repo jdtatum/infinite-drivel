@@ -7,7 +7,7 @@ class HomeMenu extends React.Component {
     this.showStoryInput = this.showStoryInput.bind(this);
     this.goToStory = this.goToStory.bind(this);
   }
-  
+
   goToNewStory(event) {
     event.preventDefault();
     console.log('Going to a New Story');
