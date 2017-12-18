@@ -12,6 +12,8 @@ class StoryDisplay extends React.Component {
     this.renderLogin = this.renderLogin.bind(this);
     this.goHome = this.goHome.bind(this);
     this.addToStory = this.addToStory.bind(this);
+    this.getUserCount = this.getUserCount.bind(this);
+
   }
 
   state = {
@@ -26,7 +28,6 @@ class StoryDisplay extends React.Component {
       context: this,
       state: 'story'
     });
-
   }
 
   componentDidMount() {
@@ -54,6 +55,16 @@ class StoryDisplay extends React.Component {
     })
   }
 
+  getUserCount() {
+    base.fetch(`/story/${this.props.params.storyId}/users/`, {
+      context: this,
+      asArray: true,
+      then(data){
+        return data;
+      }
+    });
+  }
+
   authHandler(err, authData) {
     console.log(authData);
     if (err) {
@@ -62,15 +73,20 @@ class StoryDisplay extends React.Component {
     }
 
     const usersLoggedIn = {...this.state.usersLoggedIn};
-    const users = Object.keys(usersLoggedIn);
-    const userCount = users.length + 1;
+    const userCount = this.getUserCount();
+
+    console.log('User count is ' + userCount);
 
     usersLoggedIn[`user-${userCount}`] = {name: authData.user.displayName, uid: authData.user.uid};
+
     this.setState({
       user: {...authData.user},
-      usersLoggedIn: {...usersLoggedIn}
+      usersLoggedIn: usersLoggedIn
     });
-    
+
+    base.push(`/story/${this.props.params.storyId}/users/user-${userCount}`, {
+        data: {name: authData.user.displayName, uid: authData.user.uid}
+    });
 
   }
 
@@ -102,7 +118,6 @@ class StoryDisplay extends React.Component {
   }
 
   render() {
-    console.log(this.state.user);
     if(!this.state.user.displayName) {
       return <div>{this.renderLogin()}</div>
     }

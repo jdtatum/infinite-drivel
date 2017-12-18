@@ -48,7 +48,7 @@ class App extends Component {
   }
 
   renderLogin() {
-    if(!this.state.uid) {
+    if(!this.state.user.uid) {
       return (
         <nav className="login">
           <h2>Login</h2>
@@ -62,7 +62,7 @@ class App extends Component {
   render() {
     const logout = <button onClick={this.logout}>Log out</button>;
 
-    if(!this.state.user) {
+    if(!this.state.user.uid) {
       return <div>{this.renderLogin()}</div>
     }
     return (
