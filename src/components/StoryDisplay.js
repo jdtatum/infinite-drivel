@@ -26,7 +26,6 @@ class StoryDisplay extends React.Component {
       context: this,
       state: 'story'
     });
-
   }
 
   componentDidMount() {
@@ -62,8 +61,7 @@ class StoryDisplay extends React.Component {
     }
 
     const usersLoggedIn = {...this.state.usersLoggedIn};
-    const users = Object.keys(usersLoggedIn);
-    const userCount = users.length + 1;
+    const userCount = Object.keys(usersLoggedIn).length + 1;
 
     usersLoggedIn[`user-${userCount}`] = {name: authData.user.displayName, uid: authData.user.uid};
     this.setState({
@@ -93,9 +91,8 @@ class StoryDisplay extends React.Component {
     e.preventDefault();
     console.log(this.storyBody.value);
     const story = {...this.state.story}
-    const timestamp = Date.now();
-
-    story[`story-${timestamp}`] = this.storyBody.value;
+    const lineCount = Object.keys(this.state.story).length + 1;
+    story[`story-${lineCount}`] = this.storyBody.value;
     this.setState({story});
     this.storyForm.reset();
   }
