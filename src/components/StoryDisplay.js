@@ -12,8 +12,6 @@ class StoryDisplay extends React.Component {
     this.renderLogin = this.renderLogin.bind(this);
     this.goHome = this.goHome.bind(this);
     this.addToStory = this.addToStory.bind(this);
-    this.getUserCount = this.getUserCount.bind(this);
-
   }
 
   state = {
@@ -48,21 +46,13 @@ class StoryDisplay extends React.Component {
     base.authWithOAuthPopup(provider, this.authHandler);
   }
 
-  logout() {
+  logout(event, user) {
+    console.log(user);
+    base.remove(`/users/${user}`).then(()=> {});
     base.unauth();
     this.setState({
       user: null
     })
-  }
-
-  getUserCount() {
-    base.fetch(`/story/${this.props.params.storyId}/users/`, {
-      context: this,
-      asArray: true,
-      then(data){
-        return data;
-      }
-    });
   }
 
   authHandler(err, authData) {
@@ -72,21 +62,13 @@ class StoryDisplay extends React.Component {
       return;
     }
 
-    const usersLoggedIn = {...this.state.usersLoggedIn};
-    const userCount = this.getUserCount();
-
-    console.log('User count is ' + userCount);
-
-    usersLoggedIn[`user-${userCount}`] = {name: authData.user.displayName, uid: authData.user.uid};
-
     this.setState({
-      user: {...authData.user},
-      usersLoggedIn: usersLoggedIn
-    });
+        user: {...authData.user}
+      });
 
-    base.push(`/story/${this.props.params.storyId}/users/user-${userCount}`, {
-        data: {name: authData.user.displayName, uid: authData.user.uid}
-    });
+    base.post(`/users/${authData.user.displayName}`, {
+        data: {name: authData.user.displayName, uid: authData.user.uid, currentStory: `${this.props.params.storyId}`}
+      })
 
   }
 
@@ -137,13 +119,8 @@ class StoryDisplay extends React.Component {
           </form>
         </div>
 
-          {
-            Object
-              .keys(this.state.usersLoggedIn)
-              .map(key => <p key={key}>{this.state.usersLoggedIn[key].name}</p>)
-          }
-
         <button onClick={(e) => this.goHome(e)}>Go Home</button><br />
+        <button onClick={(e) => this.logout(e, this.state.user.uid)}>Logout</button><br />
       </div>
     )
   }
