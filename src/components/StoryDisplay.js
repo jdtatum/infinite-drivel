@@ -68,6 +68,7 @@ class StoryDisplay extends React.Component {
       user: {...authData.user},
       usersLoggedIn: {...usersLoggedIn}
     });
+    
 
   }
 
@@ -117,6 +118,13 @@ class StoryDisplay extends React.Component {
             <button type="submit">Add to story</button>
           </form>
         </div>
+
+          {
+            Object
+              .keys(this.state.usersLoggedIn)
+              .map(key => <p key={key}>{this.state.usersLoggedIn[key].name}</p>)
+          }
+
         <button onClick={(e) => this.goHome(e)}>Go Home</button><br />
       </div>
     )
