@@ -67,8 +67,8 @@ class StoryDisplay extends React.Component {
     this.setState({
         user: {...authData.user}
     });
-    
-    const userCount = Object.keys(this.state.usersLoggedIn).length + 1;
+
+    const userCount = Object.keys(this.state.usersLoggedIn).length;
     base.post(`/story/${this.props.params.storyId}/users/user-${userCount}`, {
         data: [ authData.user.displayName, authData.user.uid ]
       })
