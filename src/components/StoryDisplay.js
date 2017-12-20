@@ -22,9 +22,13 @@ class StoryDisplay extends React.Component {
 
   componentWillMount() {
     // this runs right before the <App> is rendered
-    this.ref = base.syncState(`/story/${this.props.params.storyId}`, {
+    this.ref = base.syncState(`/story/${this.props.params.storyId}/content`, {
       context: this,
       state: 'story'
+    });
+    this.ref = base.syncState(`/story/${this.props.params.storyId}/users`, {
+      context: this,
+      state: 'usersLoggedIn'
     });
   }
 
@@ -38,6 +42,9 @@ class StoryDisplay extends React.Component {
 
   componentWillUnmount() {
     base.removeBinding(this.ref);
+    this.setState({
+      user: null
+    })
   }
 
 
@@ -48,11 +55,7 @@ class StoryDisplay extends React.Component {
 
   logout(event, user) {
     console.log(user);
-    base.remove(`/users/${user}`).then(()=> {});
     base.unauth();
-    this.setState({
-      user: null
-    })
   }
 
   authHandler(err, authData) {
@@ -66,8 +69,10 @@ class StoryDisplay extends React.Component {
         user: {...authData.user}
       });
 
-    base.post(`/users/${authData.user.displayName}`, {
-        data: {name: authData.user.displayName, uid: authData.user.uid, currentStory: `${this.props.params.storyId}`}
+    const timeStamp = Date.now();
+
+    base.post(`/story/${this.props.params.storyId}/users/user-${timeStamp}`, {
+        data: [ authData.user.displayName, authData.user.uid ]
       })
 
   }
@@ -92,9 +97,9 @@ class StoryDisplay extends React.Component {
     e.preventDefault();
     console.log(this.storyBody.value);
     const story = {...this.state.story}
-    const timestamp = Date.now();
+    const timeStamp = Date.now();
 
-    story[`story-${timestamp}`] = this.storyBody.value;
+    story[`story-${timeStamp}`] = this.storyBody.value;
     this.setState({story});
     this.storyForm.reset();
   }
@@ -111,16 +116,24 @@ class StoryDisplay extends React.Component {
           Object
             .keys(this.state.story)
             .map(key => <StoryBody key={key} index={key} body={this.state.story[key]} />)
-          }
+        }
         <div className="story-input">
           <form ref={(input) => this.storyForm = input} onSubmit={(e) => this.addToStory(e)}>
             <textarea ref={(input) => this.storyBody = input}></textarea><br />
             <button type="submit">Add to story</button>
           </form>
         </div>
-
         <button onClick={(e) => this.goHome(e)}>Go Home</button><br />
         <button onClick={(e) => this.logout(e, this.state.user.uid)}>Logout</button><br />
+
+        <br /><br /><strong>Logged In:</strong>
+
+        {
+          Object
+            .keys(this.state.usersLoggedIn)
+            .map(key => <p key={key}>{this.state.usersLoggedIn[key][0]}</p>)
+        }
+
       </div>
     )
   }
