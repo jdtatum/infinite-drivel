@@ -64,17 +64,14 @@ class StoryDisplay extends React.Component {
       console.error(err);
       return;
     }
-
     this.setState({
         user: {...authData.user}
-      });
-
-    const timeStamp = Date.now();
-
-    base.post(`/story/${this.props.params.storyId}/users/user-${timeStamp}`, {
+    });
+    
+    const userCount = Object.keys(this.state.usersLoggedIn).length + 1;
+    base.post(`/story/${this.props.params.storyId}/users/user-${userCount}`, {
         data: [ authData.user.displayName, authData.user.uid ]
       })
-
   }
 
   renderLogin() {
@@ -97,9 +94,9 @@ class StoryDisplay extends React.Component {
     e.preventDefault();
     console.log(this.storyBody.value);
     const story = {...this.state.story}
-    const timeStamp = Date.now();
+    const lineCount = Object.keys(this.state.story).length + 1;
 
-    story[`story-${timeStamp}`] = this.storyBody.value;
+    story[`story-${lineCount}`] = this.storyBody.value;
     this.setState({story});
     this.storyForm.reset();
   }
