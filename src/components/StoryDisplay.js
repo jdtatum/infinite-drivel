@@ -2,6 +2,7 @@ import React from 'react';
 import base from '../base';
 import { nameSplit } from '../helpers';
 import StoryBody from './StoryBody';
+import CurrentUsers from './CurrentUsers';
 
 class StoryDisplay extends React.Component {
   constructor() {
@@ -53,9 +54,12 @@ class StoryDisplay extends React.Component {
     base.authWithOAuthPopup(provider, this.authHandler);
   }
 
-  logout(event, user) {
-    console.log(user);
+  logout(key) {
+    const usersLoggedIn = {...this.state.usersLoggedIn};
+    usersLoggedIn[key] = null;
+    this.setState({ usersLoggedIn });
     base.unauth();
+    this.context.router.transitionTo(`/`);
   }
 
   authHandler(err, authData) {
@@ -68,9 +72,9 @@ class StoryDisplay extends React.Component {
         user: {...authData.user}
     });
 
-    const userCount = Object.keys(this.state.usersLoggedIn).length;
+    const userCount = Object.keys(this.state.usersLoggedIn).length + 1;
     base.post(`/story/${this.props.params.storyId}/users/user-${userCount}`, {
-        data: [ authData.user.displayName, authData.user.uid ]
+        data: { name: authData.user.displayName, uid: authData.user.uid }
       })
   }
 
@@ -121,15 +125,13 @@ class StoryDisplay extends React.Component {
           </form>
         </div>
         <button onClick={(e) => this.goHome(e)}>Go Home</button><br />
-        <button onClick={(e) => this.logout(e, this.state.user.uid)}>Logout</button><br />
 
-        <br /><br /><strong>Logged In:</strong>
 
-        {
-          Object
-            .keys(this.state.usersLoggedIn)
-            .map(key => <p key={key}>{this.state.usersLoggedIn[key][0]}</p>)
-        }
+        <CurrentUsers
+          self={this.state.user}
+          users={this.state.usersLoggedIn}
+          logout={this.logout}
+        />
 
       </div>
     )
