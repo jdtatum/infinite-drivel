@@ -13,6 +13,7 @@ class StoryDisplay extends React.Component {
     this.renderLogin = this.renderLogin.bind(this);
     this.goHome = this.goHome.bind(this);
     this.addToStory = this.addToStory.bind(this);
+    this.checkDupeLogin = this.checkDupeLogin.bind(this);
   }
 
   state = {
@@ -41,11 +42,11 @@ class StoryDisplay extends React.Component {
     });
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(key) {
     base.removeBinding(this.ref);
     this.setState({
       user: null
-    })
+    });
   }
 
 
@@ -58,12 +59,14 @@ class StoryDisplay extends React.Component {
     const usersLoggedIn = {...this.state.usersLoggedIn};
     usersLoggedIn[key] = null;
     this.setState({ usersLoggedIn });
+    this.setState({ user: null });
     base.unauth();
     this.context.router.transitionTo(`/`);
   }
 
   authHandler(err, authData) {
-    console.log(authData);
+    //Object.keys(this.state.usersLoggedIn).map(this.checkDupeLogin);
+
     if (err) {
       console.error(err);
       return;
@@ -71,11 +74,19 @@ class StoryDisplay extends React.Component {
     this.setState({
         user: {...authData.user}
     });
-
-    const userCount = Object.keys(this.state.usersLoggedIn).length + 1;
-    base.post(`/story/${this.props.params.storyId}/users/user-${userCount}`, {
+    const timeStamp = Date.now();
+    base.post(`/story/${this.props.params.storyId}/users/user-${timeStamp}`, {
         data: { name: authData.user.displayName, uid: authData.user.uid }
-      })
+    })
+
+  }
+
+  checkDupeLogin(key) {
+    console.log("Hello?")
+    // if (user === this.state.usersLoggedIn) {
+    //  alert("Exists!");
+    // }
+    return;
   }
 
   renderLogin() {

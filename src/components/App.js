@@ -30,10 +30,9 @@ class App extends Component {
   }
 
   logout() {
+    this.setState({ user: null });
     base.unauth();
-    this.setState({
-      user: null
-    })
+    window.location.reload();
   }
 
   authHandler(err, authData) {
@@ -60,7 +59,6 @@ class App extends Component {
   }
 
   render() {
-    const logout = <button onClick={this.logout}>Log out</button>;
 
     if(!this.state.user.uid) {
       return <div>{this.renderLogin()}</div>
@@ -77,7 +75,7 @@ class App extends Component {
           story={this.state.story}
           user={this.state.user}
         />
-        {logout}
+        <button onClick={this.logout}>Log out</button>
       </div>
     );
   }
